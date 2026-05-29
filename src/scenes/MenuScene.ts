@@ -37,7 +37,7 @@ export class MenuScene extends Phaser.Scene {
 
     // Level buttons
     const listH = total * (BTN_H + BTN_GAP) - BTN_GAP;
-    const startY = Math.max(100, (canvasH - listH) / 2);
+    const startY = Math.max(100, (canvasH - listH - BTN_H - BTN_GAP - 12) / 2);
 
     for (let i = 0; i < total; i++) {
       const y = startY + i * (BTN_H + BTN_GAP);
@@ -46,6 +46,12 @@ export class MenuScene extends Phaser.Scene {
         this.scene.start('game');
       });
     }
+
+    // Editor button
+    const editorY = startY + total * (BTN_H + BTN_GAP) + 12;
+    this.makeButton(canvasW / 2, editorY, '🛠 Level Editor', () => {
+      this.scene.start('editor');
+    });
   }
 
   private makeButton(x: number, y: number, label: string, onClick: () => void): void {

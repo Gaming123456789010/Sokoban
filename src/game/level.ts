@@ -14,6 +14,19 @@ const CHAR_TO_TILE: Record<string, Tile> = {
   'd': Tile.Door,
 };
 
+const TILE_TO_CHAR: Record<number, string> = {
+  [Tile.Floor]: ' ',
+  [Tile.Wall]: '#',
+  [Tile.Goal]: '.',
+  [Tile.Box]: '$',
+  [Tile.BoxOnGoal]: '*',
+  [Tile.Player]: '@',
+  [Tile.PlayerOnGoal]: '+',
+  [Tile.Ice]: '~',
+  [Tile.Switch]: 's',
+  [Tile.Door]: 'd',
+};
+
 function isGoalLike(t: Tile): boolean {
   return t === Tile.Goal || t === Tile.BoxOnGoal || t === Tile.PlayerOnGoal;
 }
@@ -50,4 +63,11 @@ export function parseLevel(text: string): GameState {
 
   if (!player) throw new Error('Level has no player');
   return { grid, player, goalCount, moves: 0, pushes: 0, switchPos };
+}
+
+/** Convert a grid back to a text-map string (lossless with parseLevel). */
+export function serializeLevel(grid: Grid): string {
+  return grid
+    .map((row) => row.map((t) => TILE_TO_CHAR[t] ?? ' ').join(''))
+    .join('\n');
 }
