@@ -21,3 +21,6 @@ export const LEVELS: string[] = [
   // 3 — two boxes, pushed right onto two goals on separate rows.
   ['#######', '#@$  .#', '#     #', '# $  .#', '#######'].join('\n'),
 ];
+
+// Par values parallel to LEVELS. 3 stars ≤ par, 2 stars ≤ 1.5×par, else 1 star.
+export const PARS: number[] = [12, 1, 3, 8];

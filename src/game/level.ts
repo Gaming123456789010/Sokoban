@@ -10,6 +10,8 @@ const CHAR_TO_TILE: Record<string, Tile> = {
   '@': Tile.Player,
   '+': Tile.PlayerOnGoal,
   '~': Tile.Ice,
+  's': Tile.Switch,
+  'd': Tile.Door,
 };
 
 function isGoalLike(t: Tile): boolean {
@@ -27,6 +29,7 @@ export function parseLevel(text: string): GameState {
   const grid: Grid = [];
   let player: Pos | null = null;
   let goalCount = 0;
+  const switchPos: Pos[] = [];
 
   for (let y = 0; y < lines.length; y++) {
     const row: Tile[] = [];
@@ -39,11 +42,12 @@ export function parseLevel(text: string): GameState {
         if (player) throw new Error('Level has more than one player');
         player = { x, y };
       }
+      if (tile === Tile.Switch) switchPos.push({ x, y });
       row.push(tile);
     }
     grid.push(row);
   }
 
   if (!player) throw new Error('Level has no player');
-  return { grid, player, goalCount, moves: 0, pushes: 0 };
+  return { grid, player, goalCount, moves: 0, pushes: 0, switchPos };
 }

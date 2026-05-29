@@ -14,6 +14,8 @@ export enum Tile {
   Player = 5,
   PlayerOnGoal = 6,
   Ice = 7,
+  Switch = 8,
+  Door = 9,
 }
 
 export type Grid = Tile[][]; // indexed [y][x], origin top-left, y increases downward
@@ -24,6 +26,7 @@ export interface GameState {
   goalCount: number;
   moves: number;
   pushes: number;
+  switchPos: Pos[];
 }
 
 export interface StateSnapshot {

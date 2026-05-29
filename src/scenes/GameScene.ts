@@ -2,7 +2,9 @@ import Phaser from 'phaser';
 import { GameController } from '../game/controller';
 import { Direction, StateSnapshot, Tile } from '../game/types';
 import { isMuted, setMuted, sfxMove, sfxPush, sfxSolve } from '../game/sound';
+import { computeStars } from '../game/stars';
 import { recordSolve } from '../game/storage';
+import { PARS } from '../game/levels';
 
 export const TILE = 48;
 export const HUD_H = 40;
@@ -48,6 +50,8 @@ export class GameScene extends Phaser.Scene {
 
   // Previous state for sound diff
   private prevState: StateSnapshot | null = null;
+
+  private unsubController: (() => void) | null = null;
 
   constructor(controller: GameController) {
     super('game');
@@ -112,7 +116,9 @@ export class GameScene extends Phaser.Scene {
       }
     });
 
-    this.controller.subscribe(() => this.render());
+    // Unsub previous listener to avoid duplicates on scene restart
+    if (this.unsubController) this.unsubController();
+    this.unsubController = this.controller.subscribe(() => this.render());
     this.render();
 
     if (window.__sokoban) {
@@ -223,12 +229,13 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-    // Sound effects + persistence: diff current vs previous
+    // Sound effects + persistence + stars: diff current vs previous
     if (this.prevState) {
       const prev = this.prevState;
       if (s.solved !== prev.solved && s.solved) {
         sfxSolve();
-        recordSolve(s.levelIndex, s.moves, s.pushes);
+        const stars = computeStars(s.moves, PARS[s.levelIndex] ?? 999);
+        try { recordSolve(s.levelIndex, s.moves, s.pushes, stars); } catch { /* don't crash render */ }
       } else if (s.pushes > prev.pushes) {
         sfxPush();
       } else if (s.moves > prev.moves) {
@@ -252,13 +259,17 @@ export class GameScene extends Phaser.Scene {
 
     const canvasW = Number(this.sys.game.config.width) || 0;
     const canvasH = Number(this.sys.game.config.height) || 0;
-    const contentH = HUD_H + s.height * TILE;
 
     if (s.solved) {
       const isLast = s.levelIndex >= s.levelCount - 1;
+      const par = PARS[s.levelIndex] ?? 999;
+      const stars = computeStars(s.moves, par);
+      const starText = '★'.repeat(stars) + '☆'.repeat(3 - stars);
 
       this.modalTitle.setText(isLast ? 'All Complete!' : 'Level Solved!');
-      this.modalStats.setText(`Moves: ${s.moves}    Pushes: ${s.pushes}`);
+      this.modalStats.setText(
+        `Moves: ${s.moves}    Pushes: ${s.pushes}\nPar: ${par}    ${starText}`
+      );
 
       if (isLast) {
         this.modalNextBg.setVisible(false);
@@ -269,7 +280,7 @@ export class GameScene extends Phaser.Scene {
       }
 
       const mx = (canvasW - MODAL_W) / 2;
-      const my = Math.max(contentH + 4, (canvasH - MODAL_H) / 2);
+      const my = Math.max(0, Math.min(canvasH - MODAL_H, (canvasH - MODAL_H) / 2));
       this.modalContainer.setPosition(mx, my).setVisible(true);
     } else {
       this.modalContainer.setVisible(false);
@@ -304,6 +315,16 @@ export class GameScene extends Phaser.Scene {
     if (t === Tile.Ice) {
       g.fillStyle(0x5ccef0, 0.4);
       g.fillRect(px + 2, py + 2, TILE - 4, TILE - 4);
+    }
+
+    if (t === Tile.Switch) {
+      g.fillStyle(0x8844ff, 1);
+      g.fillCircle(px + TILE / 2, py + TILE / 2, 8);
+    }
+
+    if (t === Tile.Door) {
+      g.fillStyle(0x8844ff, 1);
+      g.fillRect(px + 4, py + 4, TILE - 8, TILE - 8);
     }
   }
 
