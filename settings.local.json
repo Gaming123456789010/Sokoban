@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(claudev -p --dangerously-skip-permissions --output-format json --tools \"\" --system-prompt \"Respond with only valid JSON, no prose.\" \"Return exactly {\\\\\"hello\\\\\":\\\\\"world\\\\\"}\")",
+      "Bash(claudev -p --dangerously-skip-permissions --output-format json --tools \"\" --system-prompt \"Respond with only valid JSON.\" \"Return {\\\\\"a\\\\\":1}\")",
+      "Bash(.venv/Scripts/python -m pip install --upgrade pip)",
+      "Bash(.venv/Scripts/python -m pip install -r requirements.txt)",
+      "Bash(.venv/Scripts/python bot.py)",
+      "Bash(claudev -p --dangerously-skip-permissions --output-format json --model haiku --no-session-persistence --system-prompt \"test\" --json-schema '{\"type\":\"object\"}' \"what is 1+1\")",
+      "Bash(.venv/Scripts/python -c ' *)",
+      "Bash(claudev -p --dangerously-skip-permissions --output-format json --model haiku --no-session-persistence --system-prompt \"test\" --json-schema '{\"type\":\"object\"}' \"hi\")",
+      "Bash(grep -n \"exec\\\\|\\\\\"\\\\$@\\\\\"\" \"C:/Users/vakyl/.local/bin/claudev\")",
+      "Bash(.venv/Scripts/python test_bot.py \"solve x squared minus 5x plus 6 equals 0\")",
+      "Bash(PYTHONIOENCODING=utf-8 .venv/Scripts/python -c ' *)",
+      "Bash(ssh -p 22201 -o BatchMode=yes -o ConnectTimeout=10 -o StrictHostKeyChecking=accept-new oleg@box.voidnet.makscee.ru \"uname -a; which python3; which node; which claudev; python3 --version\")",
+      "Bash(sshpass -p \"zg4JrjNAOnn7p12R\" ssh -p 22201 -o ConnectTimeout=15 -o StrictHostKeyChecking=accept-new oleg@box.voidnet.makscee.ru \"echo CONNECTED; uname -a; which python3 claudev node\")",
+      "Bash(timeout 8 bash -c 'exec 3<>/dev/tcp/box.voidnet.makscee.ru/22201 && head -1 <&3')",
+      "Bash(echo \"tcp-exit=$?\")",
+      "Bash(ssh -p 22201 -o ConnectTimeout=8 -o BatchMode=yes -v oleg@box.voidnet.makscee.ru exit)",
+      "Bash(echo '{\"model\":{\"display_name\":\"Claude Opus 4\"},\"workspace\":{\"current_dir\":\"C:\\\\\\\\Users\\\\\\\\vakyl\",\"project_dir\":\"C:\\\\\\\\Users\\\\\\\\vakyl\"},\"context_window\":{\"used_percentage\":22.3,\"total_input_tokens\":44600,\"context_window_size\":200000}}')",
+      "Bash(powershell -NoProfile -ExecutionPolicy Bypass -File \"C:\\\\Users\\\\vakyl\\\\.claude\\\\statusline-command.ps1\")",
+      "Bash(npx tsc *)",
+      "Bash(npx *)"
+    ]
+  }
+}
