@@ -15,6 +15,7 @@ marked done. `tasks/INDEX.md` is the registry of all tasks and their status.
 
 - `npm run dev` — Vite dev server at http://localhost:5173
 - `npm test` — Playwright e2e suite (headless; starts the dev server itself)
+- `npm run test:unit` — Vitest unit tests
 - `npm run build` — `tsc` typecheck + Vite production build
 
 ## Architecture
@@ -28,15 +29,24 @@ Keyboard (Phaser)  ─┐
 window.__sokoban  ──┘   (state + history)
 ```
 
-- `src/game/types.ts` — `Tile` enum, `Grid` (`Tile[][]`, indexed `[y][x]`),
-  `Direction`, `Pos`, `GameState`, `StateSnapshot`.
-- `src/game/level.ts` — `parseLevel(text)`: classic Sokoban chars
-  (`#` wall, `@` player, `$` box, `.` goal, `*` box-on-goal, `+` player-on-goal, ` ` floor).
+- `src/game/types.ts` — `Tile` enum (`Floor=0..Door=9`), `Grid` (`Tile[][]`, indexed `[y][x]`),
+  `Direction`, `Pos`, `GameState` (includes `switchPos: Pos[]`), `StateSnapshot`
+  (includes `levelIndex`, `levelCount`, `deadlocked`).
+- `src/game/level.ts` — `parseLevel(text)` / `serializeLevel(grid)`: classic Sokoban chars
+  (`#` wall, `@` player, `$` box, `.` goal, `*` box-on-goal, `+` player-on-goal, ` `
+  floor, `_` ice, `^` switch, `=` door).
 - `src/game/engine.ts` — pure `tryMove(state, dir)` and `isSolved(state)`. Immutable:
-  returns a new state with a cloned grid.
-- `src/game/controller.ts` — `GameController`: `move/undo/restart/loadLevel/isSolved/getState/subscribe`.
+  returns a new state with a cloned grid. Supports ice sliding and switch/door logic.
+- `src/game/controller.ts` — `GameController`:
+  `move/undo/redo/restart/loadLevel/loadLevelByIndex/nextLevel/isSolved/getState/subscribe/levelCount`.
+- `src/game/deadlock.ts` — `deadlockedBoxes(state)`: detects corner-deadlocked boxes.
+- `src/game/sound.ts` — Web Audio sound effects (`sfxMove/sfxPush/sfxSolve`, mute support).
+- `src/game/storage.ts` — `localStorage` progress persistence (`recordSolve/getProgress/clearProgress`).
+- `src/game/stars.ts` — `computeStars(moves, par)`: 3 stars ≤ par, 2 ≤ 1.5×par, else 1.
 - `src/game/levels.ts` — the shipped level(s).
 - `src/scenes/GameScene.ts` — rendering + input. Exports `TILE`, `HUD_H`, `BANNER_H`, `SCENE_BG`.
+- `src/scenes/MenuScene.ts` — level-select menu with play and editor buttons.
+- `src/scenes/EditorScene.ts` — point-and-click level editor (paint grid, resize, validate, play/export).
 - `src/sim/api.ts` — attaches `window.__sokoban` (drives the controller directly).
 - `src/global.d.ts` — `Window.__sokoban` typing.
 - `src/main.ts` — bootstrap.
@@ -44,8 +54,10 @@ window.__sokoban  ──┘   (state + history)
 ## State model (important)
 
 The board is a **single 2D tile grid** using combined enums
-(`Floor/Wall/Goal/Box/BoxOnGoal/Player/PlayerOnGoal`). Win = no `Goal`/`PlayerOnGoal`
-cells remain. Undo = clone the whole (small) grid into a history stack.
+(`Floor=0`/`Wall`/`Goal`/`Box`/`BoxOnGoal`/`Player`/`PlayerOnGoal`/`Ice=7`/`Switch`/`Door`).
+Win = no `Goal`/`PlayerOnGoal` cells remain. Undo = clone the whole (small) grid into a
+history stack. Redo = pop from a forward stack. Ice causes the player to slide one extra
+step; switches open doors when a player or box occupies them.
 
 ## Conventions / decisions already made
 

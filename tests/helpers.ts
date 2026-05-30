@@ -6,6 +6,11 @@ export async function ready(page: Page): Promise<void> {
   await page.waitForFunction(() => window.__sokoban?.ready === true);
 }
 
+export async function startGame(page: Page): Promise<void> {
+  await page.evaluate(() => window.__sokoban!.startGame());
+  await page.waitForFunction(() => window.__sokoban?.ready === true);
+}
+
 export function state(page: Page): Promise<StateSnapshot> {
   return page.evaluate(() => window.__sokoban!.getState());
 }

@@ -126,6 +126,7 @@ export class GameScene extends Phaser.Scene {
       window.__sokoban.isWinModalVisible = () => this.modalContainer.visible;
       window.__sokoban.gotoMenu = () => this.scene.start('menu');
       window.__sokoban.isOnMenu = () => false;
+      window.__sokoban.startGame = () => {}; // already in game scene
     }
   }
 

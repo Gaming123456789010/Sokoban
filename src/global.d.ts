@@ -16,6 +16,7 @@ declare global {
       isWinModalVisible(): boolean;
       gotoMenu(): void;
       isOnMenu(): boolean;
+      startGame(): void;
     };
     __ready?: boolean;
   }

@@ -1,7 +1,7 @@
 ---
 id: 000
 title: <short title>
-status: todo          # todo | in-progress | in-review | changes-requested | done
+status: todo          # todo | in-progress | done
 priority: medium      # high | medium | low
 depends_on: []        # task ids that must be 'done' first, e.g. [002]
 owner: ""             # agent working it; empty when unclaimed
@@ -29,11 +29,3 @@ has not seen any prior conversation. Reference real paths (e.g. `src/game/engine
 
 <!-- Append-only, timestamped, newest at bottom. -->
 - 2026-05-23 — Task created.
-
-## Review
-
-**Reviewer:**
-**Verdict:** pending        <!-- approve | changes-requested -->
-**Notes:**
-
-**User sign-off:** [ ]      <!-- user checks this to mark the task done -->

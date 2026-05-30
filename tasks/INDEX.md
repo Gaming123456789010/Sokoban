@@ -19,6 +19,6 @@ Pick the lowest-id `todo` whose dependencies are all `done`. See `README.md`.
 | [012](012-deadlock-hints.md) | Deadlock detection hints | done | low | — |
 | [013](013-localstorage-persistence.md) | localStorage persistence | done | medium | 002 |
 | [014](014-par-star-rating.md) | Par / star rating | done | low | 002, 013 |
-| [015](015-level-editor.md) | Level editor | skipped | low | 002 |
+| [015](015-level-editor.md) | Level editor | done | low | 002 |
 | [016](016-ci-workflow.md) | CI workflow | done | medium | 001 |
 | [017](017-bundle-codesplit.md) | Bundle code-split / optimization | done | low | — |

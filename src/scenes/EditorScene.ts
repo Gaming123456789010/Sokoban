@@ -56,6 +56,11 @@ export class EditorScene extends Phaser.Scene {
     if (window.__sokoban) {
       window.__sokoban.ready = true;
       window.__sokoban.isOnMenu = () => false;
+      window.__sokoban.startGame = () => {
+        window.__sokoban!.ready = false;
+        this.controller.loadLevelByIndex(0);
+        this.scene.start('game');
+      };
     }
 
     // Title

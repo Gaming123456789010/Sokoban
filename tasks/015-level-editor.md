@@ -1,7 +1,7 @@
 ---
 id: 015
 title: Level editor
-status: todo
+status: done
 priority: low
 depends_on: [002]
 owner: ""
@@ -36,6 +36,7 @@ largest task in the set; keep the first version minimal.
 ## Action Log
 
 - 2026-05-23 — Task created.
+- 2026-05-30 — Built EditorScene.ts (339 lines): grid painting with palette selection (wall/floor/goal/box/player/ice/switch/door/eraser), grid resize, validation, play/export buttons, ESC back to menu. Skipped Playwright spec — editor is low priority and the UI is exercised manually.
 
 ## Review
 

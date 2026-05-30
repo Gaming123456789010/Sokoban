@@ -22,5 +22,6 @@ export function attachSimApi(controller: GameController): void {
     isWinModalVisible: () => false,
     gotoMenu: () => {},
     isOnMenu: () => false,
+    startGame: () => {},
   };
 }

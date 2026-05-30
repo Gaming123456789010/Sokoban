@@ -23,7 +23,13 @@ export class MenuScene extends Phaser.Scene {
 
     // Update sim API hooks for the menu context
     if (window.__sokoban) {
+      window.__sokoban.ready = true;
       window.__sokoban.isOnMenu = () => true;
+      window.__sokoban.startGame = () => {
+        window.__sokoban!.ready = false;
+        this.controller.loadLevelByIndex(0);
+        this.scene.start('game');
+      };
     }
 
     // Title

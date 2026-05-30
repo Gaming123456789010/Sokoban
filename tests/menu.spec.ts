@@ -1,11 +1,13 @@
 import { test, expect } from '@playwright/test';
-import { ready, state } from './helpers';
+import { ready, startGame, state } from './helpers';
 
 test.beforeEach(async ({ page }) => {
   await ready(page);
 });
 
 test('starts in game, not on menu', async ({ page }) => {
+  // App starts on the menu scene now, so call startGame first.
+  await startGame(page);
   expect(await page.evaluate(() => window.__sokoban!.isOnMenu())).toBe(false);
 });
 

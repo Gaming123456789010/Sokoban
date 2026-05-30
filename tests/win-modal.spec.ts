@@ -1,5 +1,5 @@
-import { test, expect } from '@playwright/test';
-import { load, move, ready, state } from './helpers';
+﻿import { test, expect } from '@playwright/test';
+import { load, move, ready, startGame, state } from './helpers';
 
 const isModalVisible = (page: import('@playwright/test').Page) =>
   page.evaluate(() => window.__sokoban!.isWinModalVisible());
@@ -9,7 +9,8 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('modal appears with moves and pushes when solved', async ({ page }) => {
-  // Level 1 is '#@$.#' — push right once to solve.
+  // Level 1 is '#@$.#' вЂ” push right once to solve.
+  await startGame(page);
   await page.evaluate(() => window.__sokoban!.loadLevelByIndex(1));
   expect(await isModalVisible(page)).toBe(false);
 
@@ -19,8 +20,8 @@ test('modal appears with moves and pushes when solved', async ({ page }) => {
 });
 
 test('Next Level advances and hides the modal', async ({ page }) => {
-  await page.evaluate(() => window.__sokoban!.loadLevelByIndex(1));
-  await move(page, 'right');
+  await startGame(page);
+  await page.evaluate(() => window.__sokoban!.loadLevelByIndex(1));  await move(page, 'right');
   expect(await isModalVisible(page)).toBe(true);
 
   await page.evaluate(() => window.__sokoban!.nextLevel());
@@ -29,6 +30,7 @@ test('Next Level advances and hides the modal', async ({ page }) => {
 });
 
 test('final level shows completion message and no Next button', async ({ page }) => {
+  await startGame(page);
   const count = (await state(page)).levelCount;
   await page.evaluate((n) => window.__sokoban!.loadLevelByIndex(n - 1), count);
 
@@ -43,6 +45,7 @@ test('final level shows completion message and no Next button', async ({ page })
 });
 
 test('modal hides when board is unsolved again via undo', async ({ page }) => {
+  await startGame(page);
   await page.evaluate(() => window.__sokoban!.loadLevelByIndex(1));
   await move(page, 'right');
   expect(await isModalVisible(page)).toBe(true);
@@ -52,10 +55,11 @@ test('modal hides when board is unsolved again via undo', async ({ page }) => {
 });
 
 test('modal hides when board is unsolved via restart', async ({ page }) => {
-  await page.evaluate(() => window.__sokoban!.loadLevelByIndex(1));
-  await move(page, 'right');
+  await startGame(page);
+  await page.evaluate(() => window.__sokoban!.loadLevelByIndex(1));  await move(page, 'right');
   expect(await isModalVisible(page)).toBe(true);
 
   await page.evaluate(() => window.__sokoban!.restart());
   expect(await isModalVisible(page)).toBe(false);
 });
+

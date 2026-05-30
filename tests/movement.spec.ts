@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { load, move, ready, state } from './helpers';
+import { load, move, ready, startGame, state } from './helpers';
 
 const ROOM = ['#####', '#   #', '# @ #', '#   #', '#####'].join('\n');
 
@@ -28,6 +28,7 @@ test('walls block movement', async ({ page }) => {
 });
 
 test('real keyboard input drives a move', async ({ page }) => {
+  await startGame(page);
   await load(page, ROOM);
   await page.locator('#app canvas').click();
   await page.keyboard.press('ArrowRight');
