@@ -36,5 +36,5 @@ new Phaser.Game({
   width: canvasW,
   height: canvasH,
   backgroundColor: SCENE_BG,
-  scene: [gameScene, menuScene, editorScene],
+  scene: [menuScene, gameScene, editorScene],
 });
